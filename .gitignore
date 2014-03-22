@@ -1,18 +1,15 @@
-# Object files
+# Keil uVision files
+*.axf
+*.bak
+*.iex
+*.htm
+*.lnp
+*.map
+*.plg
+*.dep
+*.crf
+*.d
 *.o
-*.ko
-
-# Libraries
-*.lib
-*.a
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
+*.lst
+*.uvopt
+*.uvgui.*
