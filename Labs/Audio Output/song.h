@@ -10,6 +10,7 @@ typedef struct {
 } TimeSignature;	
 
 static const TimeSignature
+                  // beats per measure, note to get beat
 	TWO_TWO     = {2, HALF_NOTE},
 	TWO_FOUR    = {2, QUARTER_NOTE},
 	THREE_FOUR  = {3, QUARTER_NOTE},

@@ -5,20 +5,49 @@
 #include "song.h"
 
 static Note MaryHadALittleLamb_notes[] = {
-    {E4,    DOTTED_QUARTER_NOTE}, 
-    {D4,    EIGHTH_NOTE}, 
-    {C4,    QUARTER_NOTE},
-    {D4,    QUARTER_NOTE},
-	{E4,    QUARTER_NOTE},
-    {E4,    QUARTER_NOTE},
-    {E4,    QUARTER_NOTE}
+    {E5,    DOTTED_QUARTER_NOTE}, 
+    {D5,    EIGHTH_NOTE}, 
+    {C5,    QUARTER_NOTE},
+    {D5,    QUARTER_NOTE},
+    {E5,    QUARTER_NOTE},
+    {E5,    QUARTER_NOTE},
+    {E5,    HALF_NOTE},
+
+    {D5,    QUARTER_NOTE},
+    {D5,    QUARTER_NOTE},
+    {D5,    HALF_NOTE},
+    
+    {E5,    QUARTER_NOTE},
+    {G5,    QUARTER_NOTE},
+    {G5,    HALF_NOTE},
+
+    {E5,    DOTTED_QUARTER_NOTE}, 
+    {D5,    EIGHTH_NOTE}, 
+    {C5,    QUARTER_NOTE},
+    {D5,    QUARTER_NOTE},
+    {E5,    QUARTER_NOTE},
+    {E5,    QUARTER_NOTE},
+    {E5,    QUARTER_NOTE},
+    {E5,    QUARTER_NOTE},
+    {D5,    QUARTER_NOTE},
+    {D5,    QUARTER_NOTE},
+    {E5,    QUARTER_NOTE},
+    {D5,    QUARTER_NOTE},
+    {C5,    HALF_NOTE},
+    
+    {REST,  EIGHTH_NOTE},
+    {C5,    EIGHTH_TRIPLET},
+    {E5,    EIGHTH_TRIPLET},
+    {G5,    EIGHTH_TRIPLET},
+    {C6,    EIGHTH_NOTE},
+    {REST,  EIGHTH_NOTE},
 };
 
 static Song MaryHadALittleLamb = {
-	/*.tempo =*/ 120,
-	/*.time_signature =*/ {4, QUARTER_NOTE},
-	/*.notes =*/ MaryHadALittleLamb_notes,
-	/*.note_count =*/ sizeof(MaryHadALittleLamb_notes) / sizeof(MaryHadALittleLamb_notes[0])
+	/*.tempo =*/            120,
+	/*.time_signature =*/   {4, QUARTER_NOTE},
+	/*.notes =*/            MaryHadALittleLamb_notes,
+	/*.note_count =*/       sizeof(MaryHadALittleLamb_notes) / sizeof(MaryHadALittleLamb_notes[0])
 };
 
 

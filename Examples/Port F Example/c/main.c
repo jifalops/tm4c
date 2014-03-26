@@ -6,14 +6,13 @@ void delay(int count) {
     while (count > 0) --count;
 }
 
-int main(void) {
-    
+int main(void) {    
     // buttons
     int b1;
     int b2;
     
     // Pins 0 and 4 are inputs, 1, 2, and 3 are outputs
-	portF = portInit('F', 0x11, 0x0E);
+	portF = portInit('F', 0x11, 0x0E);    
     
 	while(TRUE) {	
         // Remember port F uses negative logic on its buttons!
