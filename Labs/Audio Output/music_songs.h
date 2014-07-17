@@ -4,6 +4,15 @@
 
 #include "song.h"
 
+/*
+ ##############################################
+ #
+ # CHANGE THIS FILE TO YOUR OWN SONG
+ # (AT LEAST 5-10 NOTES)
+ #
+ ##############################################
+*/
+
 static Note MaryHadALittleLamb_notes[] = {
     {E5,    DOTTED_QUARTER_NOTE}, 
     {D5,    EIGHTH_NOTE}, 

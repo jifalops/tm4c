@@ -93,7 +93,7 @@
                 // Use ASCII value of its capital
                 letter -= 32;
             }
-            	
+            
             this->letter = letter;
             this->inputs = (char) inputs;
             this->outputs = (char) outputs;        

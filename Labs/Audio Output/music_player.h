@@ -7,6 +7,36 @@
 #include "systick.h"
 #include "song.h"
 
+// Functions called when certain events happen
+// (to be implemented in another file)
+void onTwelfthBeat(void);   // called 12 times per beat (for greater flexability in handling events)
+void onTwelfthNote(void);   // called 12 times per note
+void onMusicStop(void);     // when the end of the song is reached
+
+// public functions intended to be called by another file
+void musicInit(Port port);
+void musicLoad(Song song, int wave[], int waveSize);
+void musicPlay(void);
+void musicPause(void);
+void musicStop(void);
+void setMuted(int muted);
+
+// public functions intended for internal use within this file
+Note getCurrentNote(void);
+int noteToSystickPeriod(Note note);
+void incCurrentNote(void);
+void playNote(Note note);
+int noteDurationInMilliseconds(Note note);
+int interruptsPerSec(Note note);
+int noteToInterruptCount(Note note);
+int noteInterruptsPerBeat(Note note);
+int getCurrentWavePoint(void);
+void incCurrentNote(void);
+void incNoteInterrupts(void);
+void incBeatInterrupts(void);
+void incCurrentWavePoint(void);
+
+// Constants used for configuring music player
 static const int 
     PLL_DIVIDER = 4,
     CLOCK_SPEED = 80000000,
@@ -14,9 +44,8 @@ static const int
     SAMPLES_PER_SINE_WAVE = 32,                     // 2 * (2 ^ DAC_BITS), // the ^ is an XOR, not exponent
     MAX_FREQ = CLOCK_SPEED / SAMPLES_PER_SINE_WAVE;
 
-
+// a structure to hold information about the song's current position/status
 typedef struct {
-	int time;				// current position time in micro seconds
 	int noteIndex;			// which note of the song we are at
 	int waveIndex;			// which point of the sin-wave we are at.
 	int noteInterrupts; 	// number of wave-points traveled (duration held so far)
@@ -26,50 +55,41 @@ typedef struct {
     int isMuted;            // whether to send the output to the external DAC or continue silently
 } SongPosition;
 
-static const SongPosition initialPosition = {0,-1,0,0,0,0,0,0};
+// the default song position
+static const SongPosition initialPosition = {-1,0,0,0,0,0,0};
 
-
+// structure which holds the actual song and the sample wave to use as the instrument playing it.
 typedef struct {
 	Song song;
-	int *wave; 		        // digital wave for an instrument.
+	int *wave; 		        // pointer to the beginning of the array; a digital wave for an instrument.
 	int waveSize;
-	SongPosition position;	
+	SongPosition position;
 } PlayingSong;
 
 
+
+
+
+// Variables accessible anywhere in this file
 Port musicPort;
 PlayingSong playingSong;
 
-
-
-void onTwelfthBeat(void);   // call 12 times per beat (for greater flexability in handling events)
-void onTwelfthNote(void);
-void onMusicStop(void);
-
-void setMuted(int muted) {
-    playingSong.position.isMuted = muted;
-}
-
+// setup the PLL and Systick
 void musicInit(Port port) {
     musicPort = port;
     pllInit(PLL_DIVIDER);
     systickInit(0);
 }
 
-Note getCurrentNote() {
-    return playingSong.song.notes[playingSong.position.noteIndex];
+// Load a song and a digital sine wave to use (the "instrument")
+void musicLoad(Song song, int wave[], int waveSize) {
+    musicStop();
+    playingSong.song = song;
+    playingSong.wave = wave;
+    playingSong.waveSize = waveSize;	
 }
 
-/** Calculate the systick period for interrupts at the note's frequency. */
-int noteToSystickPeriod(Note note) {   
-    return ((unsigned int)MAX_FREQ * (unsigned int)FREQ_MULTIPLIER) / note.freq;
-}
 
-void playNote(Note note) {
-    int period = noteToSystickPeriod(note);
-    systickSetPeriod(period);    
-}
-void incCurrentNote(void);
 void musicPlay() { 
     if (playingSong.position.noteIndex == -1) {
         incCurrentNote();
@@ -90,6 +110,26 @@ void musicStop() {
     playingSong.position = initialPosition;
     onMusicStop();
 }
+
+
+
+
+// shorthand to get the current note from the notes array
+Note getCurrentNote() {
+    return playingSong.song.notes[playingSong.position.noteIndex];
+}
+
+/** Calculate the systick period for interrupts at the note's frequency. */
+int noteToSystickPeriod(Note note) {   
+    return ((unsigned int)MAX_FREQ * (unsigned int)FREQ_MULTIPLIER) / note.freq;
+}
+
+// set the Systick period to play a note (interrupt freq*32 times per second)
+void playNote(Note note) {
+    int period = noteToSystickPeriod(note);
+    systickSetPeriod(period);    
+}
+
 
 /** Calculate the duration of a note in milliseconds. */
 int noteDurationInMilliseconds(Note note) {    
@@ -181,17 +221,15 @@ void incCurrentWavePoint() {
 
 
 
-void musicLoad(Song song, int wave[], int waveSize) {
-    musicStop();
-    playingSong.song = song;
-    playingSong.wave = wave;
-    playingSong.waveSize = waveSize;	
-}
 
+
+void setMuted(int muted) {
+    playingSong.position.isMuted = muted;
+}
 
 void systickInterruptHandler() {	
     // Play next point in wave
-    // TODO: this only works if outputs are pins 0-3!
+    // this only works if outputs are pins 0-3!
     
     if (playingSong.position.isMuted == 0) {
         setPins(musicPort, getCurrentWavePoint());

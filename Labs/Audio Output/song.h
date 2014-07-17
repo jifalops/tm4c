@@ -19,14 +19,10 @@ static const TimeSignature
 	FOUR_EIGHT  = {4, EIGHTH_NOTE};
 
 typedef struct {
-//	char *title;
-//	char *artist;
-//	const unsigned int year;	
 	int tempo;          // beats per minute.
 	TimeSignature timeSignature; 
 	Note *notes;        // pointer to base of notes array
 	int notesSize;      // size of the notes array
-    //int total_time;     // playing time in milliseconds	
 } Song;
 
 
